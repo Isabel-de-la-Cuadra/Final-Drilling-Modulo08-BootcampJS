@@ -2,8 +2,8 @@
 const jwt = require('node.jwt')
 
 /*
-Declaración de una constante secretKey que utiliza el métod jwt.secret para generar una clave secreta para la firma y verificación de JWT, 
-se le pasa la cadena de caracteres que servirán para generar la clave secreta
+Declaración de una constante secretKey que utiliza el método jwt.secret para generar una clave secreta para la firma y verificación de JWT, 
+se le pasa la cadena de caracteres que servirán para generar la clave secreta. Acá se usa 'finalDrillingModulo8'
 */
 const secretKey = jwt.secret('finalDrillingModulo8')
 

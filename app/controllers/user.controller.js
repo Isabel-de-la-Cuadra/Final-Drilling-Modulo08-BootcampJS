@@ -1,3 +1,13 @@
+/*
+6. En la carpeta controllers posee los controladores tanto para el usuario (user.controller.js) como para el bootcamp
+Para el usuario se deben adecuar los siguientes controladores para la API:
+- Crear y guardar usuarios llamado createUser
+- Obtener los bootcamp de un usuario llamado findUserById
+- Obtener todos los usuario incluyendo los bootcamp llamado findAll
+- Actualizar usuario por Id llamado updateUserById
+- Eliminar un usuario por Id llamdo deleteUserById
+*/
+
 const { users } = require('../models')
 const db = require('../models')
 const User = db.users
@@ -6,13 +16,13 @@ const Bootcamp = db.bootcamps
 // Declaración constante bcrypt que se inicializa importando el módulo bcryptjs
 const bcrypt = require('bcryptjs')
     // Declaración de constante validaciones que se inicializa importando el módulo index.js
-const validaciones = require('./../middleware/index.js')
+const validations = require('./../middleware/index.js')
     // Declaración de constante que utiliza la desestructuración para extraer la variable PASSWORD del módulo db.config.js
 const { PASSWORD } = require('../config/db.config')
     // Declaración de la constante tokenValidations que inicializa la función validateToken del módulo validaciones
-const tokenValidations = validaciones.validateToken
+const tokenValidations = validations.validateToken
 
-// Crear y Guardar Usuarios
+// Crear y Guardar Usuarios | Proporcionado primer Sprint (- PASSWORD que se incluye ahora)
 exports.createUser = (user) => {
     return User.create({
             firstName: user.firstName,
@@ -29,7 +39,7 @@ exports.createUser = (user) => {
         })
 }
 
-// obtener los bootcamp de un usuario
+// obtener los bootcamp de un usuario | Proporcionado primer Sprint
 exports.findUserById = (userId) => {
     return User.findByPk(userId, {
             include: [{
@@ -49,7 +59,7 @@ exports.findUserById = (userId) => {
         })
 }
 
-// obtener todos los Usuarios incluyendo los bootcamp
+// obtener todos los Usuarios incluyendo los bootcamp | Proporcionado primer Sprint
 exports.findAll = () => {
     return User.findAll({
         include: [{
@@ -65,7 +75,7 @@ exports.findAll = () => {
     })
 }
 
-// Actualizar usuarios
+// Actualizar usuarios | Proporcionado primer Sprint
 exports.updateUserById = (userId, fName, lName) => {
     return User.update({
             firstName: fName,
@@ -84,7 +94,7 @@ exports.updateUserById = (userId, fName, lName) => {
         })
 }
 
-// Borrar usuarios
+// Borrar usuarios | Proporcionado primer Sprint
 exports.deleteUserById = (userId) => {
     return User.destroy({
             where: {
@@ -105,25 +115,31 @@ exports.deleteUserById = (userId) => {
 exports.loginUser = async(userData) => {
     // crear una constante destructurando las propiedades email y PASSWORD del objeto userData
     const { email, PASSWORD } = userData
-    // Declarar la variable wantedUser y se utiliza para almancenar el resultado de la búsqueda de un usuario en la DDBB utilizando el método findOne de Sequelize y se busca según el email pasado por argumento
+    /* Declarar la variable wantedUser y se utiliza para almancenar el resultado de la búsqueda de un usuario en la DDBB 
+    utilizando el método findOne de Sequelize y se busca según el email pasado por argumento
+    */
     const wantedUser = await User.findOne({ where: { email: email } })
         /*
-        Aquí se realizan dos comprobaciones:
-        Primero, se verifica si no se encontró ningún usuario en la base de datos con el correo electrónico proporcionado. Si es así, se lanza un error con el mensaje 'Usuario no registrado'.
-        Luego, se utiliza bcrypt.compareSync para comparar la contraseña proporcionada (PASSWORD) con la contraseña almacenada en la base de datos (wantedUser.PASSWORD). Si las contraseñas no coinciden, se lanza un error con el mensaje 'Usuario y / o contraseña incorrectos'.
+        En este if se realizan dos comprobaciones:
+        1. Se verifica si no se encontró ningún usuario en la base de datos con el correo electrónico proporcionado. 
+        Si es así, se lanza un error con el mensaje 'Usuario no registrado'.
+        2. Se utiliza bcrypt.compareSync para comparar la contraseña proporcionada (PASSWORD) con la contraseña almacenada 
+        en la base de datos (wantedUser.PASSWORD). Si las contraseñas no coinciden, se lanza un error con el mensaje 
+        'Usuario y / o contraseña incorrectos'.
         */
-
     if (!wantedUser) {
         throw 'Usuario no registrado'
     } else if (!bcrypt.compareSync(PASSWORD, wantedUser.PASSWORD)) {
         throw 'Usuario y / o contraseña incorrectos'
     }
     /*
-    const accessToken: Aquí se genera un token de acceso utilizando una función encodeToken del módulo tokenValidations. Esto indica que se está utilizando un token (posiblemente un JSON Web Token) para manejar la autenticación del usuario.
+    Se genera un token de acceso utilizando una función encodeToken del módulo tokenValidations. 
+    Esto indica que se está utilizando un token (posiblemente un JSON Web Token) para manejar la autenticación del usuario.
     */
     const accessToken = tokenValidations.encodeToken(wantedUser)
         /*
-        const objUser: Se crea un objeto llamado objUser que contiene información del usuario, incluyendo su id, nombre, apellido, correo electrónico y el token de acceso generado.
+        Acá se crea un objeto llamado objUser que contiene información del usuario, incluyendo su id, nombre, apellido, 
+        correo electrónico y el token de acceso generado.
         */
     const objUSer = {
             id: wantedUser.id,
@@ -132,6 +148,6 @@ exports.loginUser = async(userData) => {
             email: wantedUser.email,
             accessToken: accessToken
         }
-        // Finalmente, la función retorna el objeto objUser, que contiene la información del usuario y el token de acceso. Presumiblemente, este objeto se utilizará para proporcionar información al usuario después de un inicio de sesión exitoso.
+        // Se retorna el objeto objUser, que contiene la información del usuario y el token de acceso. 
     return objUSer
 }
