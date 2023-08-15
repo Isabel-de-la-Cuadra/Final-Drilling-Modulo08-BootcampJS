@@ -3,10 +3,14 @@
 - index.js módulo que exporta los middleware
 */
 
+const verifyToken = require('./auth')
+const verifySingUp = require('./verifySingUp')
+
+
 // Declarar una constante validations que se inicializa como un objeto al que se le asignan las propiedades validateEmail y validateToken
 const validations = {
-    validateEmail: require('./verifySingUp'),
-    validateToken: require('./auth')
+    verifySingUp: verifySingUp,
+    verifyToken: verifyToken
 }
 
 // Exportar validations

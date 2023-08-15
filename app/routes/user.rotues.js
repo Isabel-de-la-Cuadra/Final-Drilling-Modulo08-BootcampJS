@@ -23,6 +23,7 @@ const tokenValidations = validations.validateToken
 // Declarar una variable llamada decodeTokenID donde se almacenarán los resultados de la decodificación del token
 let decodeTokenID
 
+/* No deberíamos necesitarlo después de los cambios de hoy 
 // middleware
 router.use((request, response, next) => {
     const headToken = request.headers.authorization
@@ -38,6 +39,7 @@ router.use((request, response, next) => {
         }
     }
 })
+*/
 
 // Requerimiento: proveeer las siguientes endpoint:
 // MÉTODO POST URL /api/signup ACCIÓN Registro de un nuevo usuario ACCESO público
