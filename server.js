@@ -17,14 +17,12 @@ app.use(cors({
 }))
 
 app.listen(port, async() => {
-    await db.sequelize.sync()
+    await db.sequelize.sync({ force: false })
     console.log("Servidor ejecutando Puerto: " + port);
 })
 
-
-
 app.use(userRoutes)
-
+app.use(bootcampRoutes)
 
 
 /* Requerimiento de primer sprint ahora se va a ejecutar por postman
