@@ -15,12 +15,13 @@ const Bootcamp = db.bootcamps
 
 // Declaración constante bcrypt que se inicializa importando el módulo bcryptjs
 const bcrypt = require('bcryptjs')
-    // Declaración de constante validaciones que se inicializa importando el módulo index.js
-const validations = require('./../middleware/index.js')
-    // Declaración de constante que utiliza la desestructuración para extraer la variable PASSWORD del módulo db.config.js
-const { PASSWORD } = require('../config/db.config')
-    // Declaración de la constante tokenValidations que inicializa la función validateToken del módulo validaciones
-const tokenValidations = validations.validateToken
+
+// Declarar una constante que importa el módulo jsonwebtoken
+const jwt = require('jsonwebtoken');
+
+// Importar la clave secreta desde el archivo auth.config
+const { secretKey } = require('../config/auth.config');
+
 
 // Crear y Guardar Usuarios | Proporcionado primer Sprint (- PASSWORD que se incluye ahora)
 exports.createUser = (user) => {
@@ -28,7 +29,8 @@ exports.createUser = (user) => {
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
-            PASSWORD: bcrypt.hashSync(user.PASSWORD, 10)
+            // Creación de un password encriptado por bcrypt.hashSync
+            password: bcrypt.hashSync(user.password, 10)
         })
         .then(user => {
             console.log(`>> Se ha creado el usuario: ${JSON.stringify(user, null, 4)}`)
@@ -111,43 +113,48 @@ exports.deleteUserById = (userId) => {
 }
 
 // Ruta Login. Función que maneja la lógica de inicio de sesión de usuario
+
 // Exportar la función loginUser
 exports.loginUser = async(userData) => {
-    // crear una constante destructurando las propiedades email y PASSWORD del objeto userData
-    const { email, PASSWORD } = userData
+
+    // crear una constante destructurando las propiedades email y password del objeto userData
+    const { email, password } = userData;
+
     /* Declarar la variable wantedUser y se utiliza para almancenar el resultado de la búsqueda de un usuario en la DDBB 
     utilizando el método findOne de Sequelize y se busca según el email pasado por argumento
     */
-    const wantedUser = await User.findOne({ where: { email: email } })
-        /*
-        En este if se realizan dos comprobaciones:
-        1. Se verifica si no se encontró ningún usuario en la base de datos con el correo electrónico proporcionado. 
-        Si es así, se lanza un error con el mensaje 'Usuario no registrado'.
-        2. Se utiliza bcrypt.compareSync para comparar la contraseña proporcionada (PASSWORD) con la contraseña almacenada 
-        en la base de datos (wantedUser.PASSWORD). Si las contraseñas no coinciden, se lanza un error con el mensaje 
-        'Usuario y / o contraseña incorrectos'.
-        */
+    const wantedUser = await User.findOne({ where: { email: email } });
+
+    /*
+    En este if se realizan dos comprobaciones:
+    1. Se verifica si no se encontró ningún usuario en la base de datos con el correo electrónico proporcionado. 
+    Si es así, se lanza un error con el mensaje 'Usuario no registrado'.
+    2. Se utiliza bcrypt.compareSync para comparar la contraseña proporcionada (password) con la contraseña almacenada 
+    en la base de datos.. Si las contraseñas no coinciden, se lanza un error con el mensaje 
+    'Usuario y / o contraseña incorrectos'.
+    */
     if (!wantedUser) {
         throw 'Usuario no registrado'
-    } else if (!bcrypt.compareSync(PASSWORD, wantedUser.PASSWORD)) {
-        throw 'Usuario y / o contraseña incorrectos'
-    }
-    /*
-    Se genera un token de acceso utilizando una función encodeToken del módulo tokenValidations. 
-    Esto indica que se está utilizando un token (posiblemente un JSON Web Token) para manejar la autenticación del usuario.
-    */
-    const accessToken = tokenValidations.encodeToken(wantedUser)
-        /*
-        Acá se crea un objeto llamado objUser que contiene información del usuario, incluyendo su id, nombre, apellido, 
-        correo electrónico y el token de acceso generado.
-        */
-    const objUSer = {
-            id: wantedUser.id,
-            firstName: wantedUser.firstName,
-            lastName: wantedUser.lastName,
-            email: wantedUser.email,
-            accessToken: accessToken
+    } else {
+        const passwordMatch = bcrypt.compareSync(password, wantedUser.password)
+        console.log("línea 143 user.controller.js passwordMatch " + passwordMatch)
+        if (!passwordMatch) {
+            throw 'Usuario y / o contraseña incorrectos'
         }
-        // Se retorna el objeto objUser, que contiene la información del usuario y el token de acceso. 
-    return objUSer
+    }
+
+    // Generar un token de acceso utilizando jwt.sign
+    const accessToken = jwt.sign({ userId: wantedUser.id }, secretKey, { expiresIn: '1h' });
+
+    //Crear un objeto de respuesta que contiene la información del usuario y el accessToken
+    const objectUser = {
+        id: wantedUser.id,
+        firstName: wantedUser.firstName,
+        lastName: wantedUser.lastName,
+        email: wantedUser.email,
+        accessToken: accessToken
+    }
+
+    // Se retorna el objeto objectUser, que contiene la información del usuario y el token de acceso.
+    return objectUser;
 }

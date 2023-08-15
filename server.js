@@ -1,11 +1,11 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const port = 3000
 
+const port = 3000
 const db = require('./app/models')
-const userController = require('./app/controllers/user.controller')
-const bootcampController = require('./app/controllers/bootcamp.controller')
+    //const userController = require('./app/controllers/user.controller')
+    //const bootcampController = require('./app/controllers/bootcamp.controller')
 const userRoutes = require('./app/routes/user.routes.js')
 const bootcampRoutes = require('./app/routes/bootcamp.routes.js')
 
@@ -13,11 +13,11 @@ const bootcampRoutes = require('./app/routes/bootcamp.routes.js')
 app.use(express.json())
 app.use(cors({
     //origin: ['http://localhost:5500', 'http://127.0.0.1:5500']
-    origin: '*'
+    //origin: '*'
 }))
 
 app.listen(port, async() => {
-    await db.sequelize.sync({ force: false })
+    await db.sequelize.sync()
     console.log("Servidor ejecutando Puerto: " + port);
 })
 

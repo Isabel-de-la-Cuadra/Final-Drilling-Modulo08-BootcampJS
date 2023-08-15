@@ -9,11 +9,19 @@ const db = require('../models')
 // Declarar una constante User que accede a la propiedad users del objeto db
 const User = db.users
 
-// Exportar la función validateEmail que recibe la dirección de correo electrónico email como argumento
-exports.verifySingUp = (email) => {
-    // Declarar la constante wantedEmail donde se utiliza el métod findOne del modelo User, donde se busca la coincidencia del valor email pasado por parámetro y el de la db
-    const wantedEmail = User.findOne({ where: { email: email } })
+// Crear la función verifySingUp que recibe la dirección de correo electrónico email como argumento
+const verifySingUp = async(email) => {
+    try {
+        // Busca un usuario en la base de datos con el correo electrónico proporcionado
+        const existingEmail = await User.findOne({ where: { email } });
 
-    // Se retorna el resultado de la búsqueda, puede ser que se cumple la condición o null, si no se encuentra 
-    return wantedEmail
+        // Retorna true si el usuario con el correo electrónico ya existe, y false si no existe
+        return !!existingEmail;
+    } catch (error) {
+        // Si ocurre un error en la consulta a la base de datos, lanza una excepción
+        throw error;
+    }
 }
+
+// Exportar la función middleware verifySingUp para su uso en otras partes del proyecto
+module.exports = verifySingUp;

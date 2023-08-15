@@ -38,4 +38,4 @@ db.bootcamps.belongsToMany(db.users, {
     foreignKey: "bootcamp_id",
 });
 
-module.exports = db
+module.exports = db;

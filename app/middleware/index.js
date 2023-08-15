@@ -14,4 +14,4 @@ const validations = {
 }
 
 // Exportar validations
-module.exports = validations
+module.exports = validations;
