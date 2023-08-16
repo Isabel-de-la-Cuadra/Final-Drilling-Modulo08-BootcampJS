@@ -39,10 +39,13 @@ router.post('/api/bootcamp', validations.verifyToken, async(request, response) =
 
         // Si viene toda la información y cumple con los requisitos, se crea un bootcamp
         const bootcamp = await bootcampController.createBootcamp(request.body)
+
+        // Retornar respuesta JSON
         return response.json({ success: true, data: bootcamp })
 
-        // Mostrar error en la ejecución del código
+
     } catch (error) {
+        // Retornar error en la ejecución del código
         return response.status(500).json({ success: false, message: 'Error en el servidor', data: error })
     }
 })
@@ -80,8 +83,10 @@ router.post('/api/bootcamp/addUser', validations.verifyToken, async(request, res
             return response.status(500).json({ success: false, message: 'Error al agregar usuario al bootcamp' });
         }
 
+        // Retornar respuesta JSON
         return response.json({ success: true, message: 'Usuario agregado exitosamente al bootcamp' });
     } catch (error) {
+        // Retornar error en la ejecución del código
         return response.status(500).json({ success: false, message: 'Error en el servidor', error: error.message });
     }
 });
@@ -95,12 +100,15 @@ router.get('/api/bootcamp/:id', validations.verifyToken, async(request, response
         // Obtener la información del bootcamp por su ID y también los usuarios registrados en él
         const bootcampWithUsers = await bootcampController.findById(bootcampId);
 
+        // Condicional si no existe el bootcamp
         if (!bootcampWithUsers) {
             return response.status(404).json({ success: false, message: 'Bootcamp no encontrado' });
         }
 
+        // Retornar respuesta JSON
         return response.json({ success: true, data: bootcampWithUsers });
     } catch (error) {
+        // Retornar error en la ejecución del código
         return response.status(500).json({ success: false, message: 'Error en el servidor', error: error.message });
     }
 });
@@ -123,10 +131,13 @@ router.get('/api/bootcamp', async(request, response) => {
             };
         });
 
+        // Retornar respuesta JSON
         return response.json({ success: true, data: filteredBootcamps });
     } catch (error) {
+        // Retornar error en la ejecución del código
         return response.status(500).json({ success: false, message: 'Error en el servidor', error: error.message });
     }
 });
 
+// Exportar router para que esté disponible en otras partes del proyecto
 module.exports = router;

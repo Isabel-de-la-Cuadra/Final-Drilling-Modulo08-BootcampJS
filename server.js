@@ -1,26 +1,38 @@
+// Importar el módulo express para crear la aplicación
 const express = require('express')
+
+// Crear una instancia de la aplicación express
 const app = express()
+
+// Importar el módulo cors para manejar los encabezados CORS en las solicitudes
 const cors = require('cors')
 
+//Definir el número de puerto en el que se ejecutará el servidor
 const port = 3000
+
+// Importar el objeto de base de datos y modelos definidos en la carpeta "models"
 const db = require('./app/models')
-    //const userController = require('./app/controllers/user.controller')
-    //const bootcampController = require('./app/controllers/bootcamp.controller')
+
+// Importar las rutas definidas en los archivos "user.routes.js" y "bootcamp.routes.js"
 const userRoutes = require('./app/routes/user.routes.js')
 const bootcampRoutes = require('./app/routes/bootcamp.routes.js')
 
-
+// Habilitar el uso de JSON en las solicitudes y respuestas
 app.use(express.json())
+
+// Configurar el middleware CORS para permitir solicitudes de diferentes orígenes 
 app.use(cors({
     //origin: ['http://localhost:5500', 'http://127.0.0.1:5500']
     //origin: '*'
 }))
 
+// Escuchar el puerto especificado y sincronizar la base de datos antes de iniciar el servidor
 app.listen(port, async() => {
     await db.sequelize.sync()
     console.log("Servidor ejecutando Puerto: " + port);
 })
 
+// Asociar las rutas definidas en 'userRoutes' y 'bootcampRoutes' a la aplicación 
 app.use(userRoutes)
 app.use(bootcampRoutes)
 

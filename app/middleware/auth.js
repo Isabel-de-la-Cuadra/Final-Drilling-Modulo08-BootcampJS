@@ -15,7 +15,7 @@ const verifyToken = (request, response, next) => {
     // Obtener el token de la cabecera authorization de la solicitud
     const token = request.headers.authorization;
 
-    // Verificar si el token no está
+    // Verificar si el token no viene
     if (!token) {
 
         // Retornar una respuesta 401

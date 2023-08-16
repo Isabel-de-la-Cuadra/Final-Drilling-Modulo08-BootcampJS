@@ -49,10 +49,12 @@ router.post('/api/signup', async(request, response) => {
 
         // Si viene toda la información y cumple con los requisitos, se crea un usuario
         const user = await userController.createUser(request.body)
+
+        // Retornar una respuesta JSON
         return response.json({ success: true, data: user })
 
-        // Mostrar error en la ejecución del código
     } catch (error) {
+        // Retornar error en la ejecución del código
         return response.status(500).json({ success: false, message: 'Error en el servidor', data: error })
     }
 })
@@ -60,9 +62,13 @@ router.post('/api/signup', async(request, response) => {
 // MÉTODO POST URL /api/signin ACCIÓN Inicio de sesión en la API ACCESO público
 router.post('/api/signin', async(request, response) => {
     try {
+        // Declarar constante token que recibe los datos del cuerpo de la solicitud
         const token = await userController.loginUser(request.body)
+
+        // Retornar una respuesta JSON con éxito y el token de acceso generado
         return response.json({ success: true, message: 'Usuario Encontrado', data: token })
     } catch (error) {
+        // Retornar error en la ejecución del código
         return response.status(404).json({ success: false, message: error })
     }
 })
@@ -79,11 +85,17 @@ router.get('/api/user/:id', validations.verifyToken, async(request, response) =>
 
         // Crear una constante para almacenar la información del user
         const wantedUser = await userController.findUserById(idUser)
+
+        // Respuesta si no es el user esperado
         if (!wantedUser) {
             return response.status(404).json({ success: false, message: 'Usuario no encontrado' });
         }
+
+        // Retornar una respuesta JSON 
         return response.json({ success: true, data: wantedUser });
+
     } catch (error) {
+        // Retornar error en la ejecución del código
         return response.status(500).json({ success: false, message: 'Error en el servidor', error: error.message });
     }
 });
@@ -91,9 +103,13 @@ router.get('/api/user/:id', validations.verifyToken, async(request, response) =>
 // MÉTODO GET URL /api/user/ ACCIÓN Lista información de todos los usuarios y los Bootcamp registrados ACCESO por medio de token, previamente iniciada la sesión
 router.get('/api/user', validations.verifyToken, async(request, response) => {
     try {
+        // Crear una constante para almacenar la información de todos los usuarios y los bootcamp
         const wantedUsers = await userController.findAll()
+
+        // Retornar respuesta JSON
         return response.json({ success: true, message: 'Listado de Usuarios', data: wantedUsers })
     } catch (error) {
+        // Retornar error en la ejecución del código
         return response.status(500).json({ success: false, message: 'Error en el servidor', error: error.message });
     }
 })
@@ -111,7 +127,7 @@ router.put('/api/user/:id', validations.verifyToken, async(request, response) =>
         // Crear una constante para firstName y lastName, con la información a modificar que viene por el request.body
         const { firstName, lastName } = request.body
 
-        // Validar si se proporcionó al menos un valor para actualizar
+        // Validar si se proporcionó al menos un valor para actualizar y es un string
         if ((!firstName || typeof firstName !== 'string') && (!lastName || typeof lastName !== 'string')) {
             return response.status(400).json({ success: false, message: 'Debe indicar un nombre o apellido válido para actualizar' });
         }
@@ -128,6 +144,7 @@ router.put('/api/user/:id', validations.verifyToken, async(request, response) =>
         return response.json({ success: true, message: 'Usuario Actualizado', data: updatedUser });
 
     } catch (error) {
+        // Retornar error en la ejecución del código
         return response.status(500).json({ success: false, message: 'Error en el servidor', error: error.message });
     }
 })
@@ -150,12 +167,14 @@ router.delete('/api/user/:id', validations.verifyToken, async(request, response)
             return response.status(404).json({ success: false, message: 'Usuario no encontrado o no pudo ser borrado' });
         }
 
-        // Devolver información actualizada del usuario
+        // Retornar información del usuario que fue borrada
         return response.json({ success: true, message: 'Usuario Borrado', data: deletedUser });
 
     } catch (error) {
+        // Retornar error en la ejecución del código
         return response.status(500).json({ success: false, message: 'Error en el servidor', error: error.message });
     }
 })
 
+// Exportar router para que esté disponible en otras partes del proyecto
 module.exports = router;

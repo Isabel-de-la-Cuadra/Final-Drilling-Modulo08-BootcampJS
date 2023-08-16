@@ -7,7 +7,7 @@ const verifyToken = require('./auth')
 const verifySingUp = require('./verifySingUp')
 
 
-// Declarar una constante validations que se inicializa como un objeto al que se le asignan las propiedades validateEmail y validateToken
+// Declarar una constante validations que se inicializa como un objeto al que se le asignan las propiedades verifySingUp y verifyToken
 const validations = {
     verifySingUp: verifySingUp,
     verifyToken: verifyToken
