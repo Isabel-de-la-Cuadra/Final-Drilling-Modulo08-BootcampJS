@@ -1,6 +1,8 @@
 # Final-Drilling-Modulo08-BootcampJS
 Proyecto para evaluar lo aprendido en el Módulo 8, Implementaicón de API backend Node Express, del Curso Aplicaciones de Desarrollo Full Stack JavaScript 
 
+Para usar este proyecto solo tienes que clonarlo y modificar en el archivo db.config.js el USER y el PASSWORD a tu base de datos postgres.
+
 IMPLEMENTACIÓN DE API BACKEND NODE EXPRESS
 
 INSTRUCCIONES
