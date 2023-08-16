@@ -137,7 +137,6 @@ exports.loginUser = async(userData) => {
         throw 'Usuario no registrado'
     } else {
         const passwordMatch = bcrypt.compareSync(password, wantedUser.password)
-        console.log("línea 143 user.controller.js passwordMatch " + passwordMatch)
         if (!passwordMatch) {
             throw 'Usuario y / o contraseña incorrectos'
         }

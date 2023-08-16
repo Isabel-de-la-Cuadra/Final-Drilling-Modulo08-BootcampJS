@@ -158,6 +158,4 @@ router.delete('/api/user/:id', validations.verifyToken, async(request, response)
     }
 })
 
-
-
 module.exports = router;
