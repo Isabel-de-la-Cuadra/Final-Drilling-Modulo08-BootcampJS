@@ -19,7 +19,7 @@ respectivas para la gestión de cursos Bootcamp de una determinada empresa de ad
 aplica la metodología scrum y ya realizó el primer Sprint del proyecto que se trató en el diseño e
 implementación por medio de Node.js para el registro de cursos Bootcamp y de usuarios de los mismos.
 
-Ahora bien para este segundo Sprint, se desea adecuar dicho diseño con la finalidad que éste disponible a
+Ahora bien para este segundo Sprint, se desea adecuar dicho diseño con la finalidad que esté disponible a
 través de una API RESTful, para este nuevo sprint, se agrega a la tabla users el nuevo campo password,
 con un mínimo de 8 caracteres de requerimiento, con la finalidad de poder autenticar al usuario, el modelo
 de entidad relación de la base de datos es el que muestra a continuación:El requerimiento emitido por la empresa de adiestramiento parte del principio de que los usuarios pueden participar en distintos bootcamp, y a su vez distintos bootcamp poseen distintos usuarios como se realizó en el primer sprint .
